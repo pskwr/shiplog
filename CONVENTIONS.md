@@ -129,3 +129,42 @@ bundled `@typescript/vfs` call `localStorage.getItem()` at module load time,
 which crashes. Fix: `polyfill-localstorage.cjs` in project root, loaded via
 `NODE_OPTIONS='--require ./polyfill-localstorage.cjs'` in all package.json
 scripts. Remove once Next.js ships a fix or the app pins an older Node.
+
+---
+
+## ADR — Deployment: GitHub Pages (v0)
+
+**Decision:** Deploy the Next.js app to GitHub Pages via static export.
+
+**URL:** `https://pskwr.github.io/shiplog/`
+
+**Rationale:**
+- Zero cost (GitHub Pages free tier).
+- Zero external secrets — deployment uses only the built-in `GITHUB_TOKEN`
+  supplied by GitHub Actions; no Vercel token or other credential stored in
+  the repo.
+- Push-to-deploy: every push to `main` triggers `.github/workflows/deploy.yml`
+  which builds, uploads the artifact, and deploys to Pages automatically.
+- Next.js `output: 'export'` generates a static `out/` directory; GitHub Pages
+  serves it directly.
+
+**Key configuration:**
+- `next.config.ts`: `output: 'export'`, `basePath: '/shiplog'` (production only).
+- `basePath` is empty in development so `pnpm dev` works at `localhost:3000`.
+- The `/changelog` page is a client component using `useSearchParams` + `useEffect`
+  because static export does not support server-side `searchParams` resolution.
+
+**To reproduce a deploy manually:**
+1. `pnpm build` — generates `out/` directory.
+2. The Pages workflow (`deploy.yml`) picks this up automatically on push to `main`.
+3. To trigger manually: `gh workflow run deploy.yml`.
+
+**Alternatives considered:**
+- Vercel free tier — natural for Next.js but requires browser OAuth setup to
+  connect the GitHub repo; no automated path to create and link the account.
+- Fly.io / Railway — require a deploy token stored as a GitHub secret.
+
+**Future migration:** If server-side rendering or API routes become necessary
+(e.g., adding a real LLM generation backend), migrate to Vercel or a container
+host. Swap out `output: 'export'` and remove `basePath`; the rest of the app
+is unchanged.
