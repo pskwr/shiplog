@@ -114,13 +114,13 @@ implementation drops in without touching `ChangelogPage` or its callers.
 
 ### Deferred (not in v0)
 
-| Feature | Why deferred |
-|---|---|
-| Real LLM generation | CEO owns API key provisioning; seam is wired |
-| GitHub auth / private repos | Public repos only; no token needed |
-| Persistence (DB) | No requirement in v0; add when storing history |
-| User accounts / billing | Not in scope for first slice |
-| Pagination beyond 20 PRs | Sufficient for demo; add when needed |
+| Feature                     | Why deferred                                   |
+| --------------------------- | ---------------------------------------------- |
+| Real LLM generation         | CEO owns API key provisioning; seam is wired   |
+| GitHub auth / private repos | Public repos only; no token needed             |
+| Persistence (DB)            | No requirement in v0; add when storing history |
+| User accounts / billing     | Not in scope for first slice                   |
+| Pagination beyond 20 PRs    | Sufficient for demo; add when needed           |
 
 ### Node.js 25 compatibility note
 
@@ -139,6 +139,7 @@ scripts. Remove once Next.js ships a fix or the app pins an older Node.
 **URL:** `https://pskwr.github.io/shiplog/`
 
 **Rationale:**
+
 - Zero cost (GitHub Pages free tier).
 - Zero external secrets — deployment uses only the built-in `GITHUB_TOKEN`
   supplied by GitHub Actions; no Vercel token or other credential stored in
@@ -149,17 +150,20 @@ scripts. Remove once Next.js ships a fix or the app pins an older Node.
   serves it directly.
 
 **Key configuration:**
+
 - `next.config.ts`: `output: 'export'`, `basePath: '/shiplog'` (production only).
 - `basePath` is empty in development so `pnpm dev` works at `localhost:3000`.
 - The `/changelog` page is a client component using `useSearchParams` + `useEffect`
   because static export does not support server-side `searchParams` resolution.
 
 **To reproduce a deploy manually:**
+
 1. `pnpm build` — generates `out/` directory.
 2. The Pages workflow (`deploy.yml`) picks this up automatically on push to `main`.
 3. To trigger manually: `gh workflow run deploy.yml`.
 
 **Alternatives considered:**
+
 - Vercel free tier — natural for Next.js but requires browser OAuth setup to
   connect the GitHub repo; no automated path to create and link the account.
 - Fly.io / Railway — require a deploy token stored as a GitHub secret.

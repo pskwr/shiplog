@@ -1,8 +1,6 @@
 import type { PullRequest } from "./types";
 
-export type IngestResult =
-  | { ok: true; prs: PullRequest[] }
-  | { ok: false; error: string };
+export type IngestResult = { ok: true; prs: PullRequest[] } | { ok: false; error: string };
 
 interface GitHubPRResponse {
   number: number;

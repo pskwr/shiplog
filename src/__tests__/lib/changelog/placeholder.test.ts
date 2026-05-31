@@ -44,9 +44,7 @@ describe("PlaceholderChangelogGenerator", () => {
     const prs = [makePR({ title: "fix: correct the regression" })];
     const { technical } = await generator.generate(prs);
 
-    expect(technical.some((b) => b.includes("fix: correct the regression"))).toBe(
-      true,
-    );
+    expect(technical.some((b) => b.includes("fix: correct the regression"))).toBe(true);
   });
 
   it("classifies feat: titles as New feature in technical bullets", async () => {

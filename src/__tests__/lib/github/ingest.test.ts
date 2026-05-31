@@ -40,9 +40,7 @@ describe("fetchRecentPRs", () => {
   });
 
   it("returns mapped PullRequest objects for merged PRs only", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
-      makeResponse(200, [MERGED_PR, OPEN_PR]),
-    );
+    vi.spyOn(global, "fetch").mockResolvedValue(makeResponse(200, [MERGED_PR, OPEN_PR]));
 
     const result = await fetchRecentPRs("owner", "repo");
 
@@ -91,9 +89,7 @@ describe("fetchRecentPRs", () => {
   });
 
   it("returns empty prs array when all PRs are unmerged", async () => {
-    vi.spyOn(global, "fetch").mockResolvedValue(
-      makeResponse(200, [OPEN_PR]),
-    );
+    vi.spyOn(global, "fetch").mockResolvedValue(makeResponse(200, [OPEN_PR]));
 
     const result = await fetchRecentPRs("owner", "repo");
 

@@ -10,9 +10,7 @@ export class PlaceholderChangelogGenerator implements ChangelogGenerator {
       };
     }
 
-    const technical = prs.map(
-      (pr) => `- ${classifyTitle(pr.title)}: ${pr.title} (#${pr.number})`,
-    );
+    const technical = prs.map((pr) => `- ${classifyTitle(pr.title)}: ${pr.title} (#${pr.number})`);
     const customerFacing = buildCustomerSummary(prs);
 
     return { technical, customerFacing };
@@ -21,8 +19,7 @@ export class PlaceholderChangelogGenerator implements ChangelogGenerator {
 
 function classifyTitle(title: string): string {
   const lower = title.toLowerCase();
-  if (lower.startsWith("feat:") || lower.startsWith("feature:"))
-    return "New feature";
+  if (lower.startsWith("feat:") || lower.startsWith("feature:")) return "New feature";
   if (lower.startsWith("fix:")) return "Bug fix";
   if (lower.startsWith("refactor:")) return "Refactor";
   if (lower.startsWith("docs:")) return "Documentation";
